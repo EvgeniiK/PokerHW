@@ -8,7 +8,15 @@ class Card
 	end
 
 	def show
-		print @suit,@dignity
+		#or can initialize all dignities in hash
+		#this method brakes when deck differs from origin
+		letters_dingnity = {10=>'T',11=>'J',12=>'Q',13=>'K',14=>'A'}
+		print @suit, 
+		if @dignity>10 
+			letters_dingnity[@dignity]  
+		else 
+			@dignity
+		end
 	end
 
 end
@@ -22,7 +30,7 @@ class Deck
 	#or changed later
 	def initialize (
 		suits = ['H','D','C','S'],
-		dignities = ['2','3','4','5','6','7','8','9','T','J','Q','K','A'])
+		dignities = [2,3,4,5,6,7,8,9,10,11,12,13,14])
 		@suits = suits
 		@dignities = dignities
 		@deck = []
@@ -66,16 +74,15 @@ class Table
 	end
 
 	def player_hand
-		puts "Player hand is: "
+		player_cards = []
 		(1..2).each do
-			print @deck.get_card.show, ' '
+			player_cards = player_cards + [@deck.get_card]
 		end
-		puts
+		return player_cards
 	end
 
 	def board
 		board_cards = []	
-		#puts "Boad is: "
 		(1..5).each do
 			board_cards = board_cards + [@deck.get_card]
 		end
@@ -92,29 +99,50 @@ class Determinator
 	def determination(cards)
 		@cards = cards
 		hashes
+		strait = strait?
 		case
-			when @dignities.has_value?(4)
-				puts "care"			
-			when @dignities.has_value?(3)&&@dignities.has_value?(2)
-				puts "fullhouse"
-			when @suits.has_value?(5)
-				puts "flush"
-#make Strait
-			when @dignities.
-				puts	"strait"
-			when @dignities.has_value?(3)
-				puts "set"
-			when @dignities.has_value?(2)
-				puts "pair"
-		  when @dignities.has_value?(1)
-				puts "one"
+		when strait&&strait?&&@dignities.has_key(14)
+			puts "flash royal"
+		when strait&&strait?
+			puts "strait-flush"
+		when @dignities.has_value?(4)
+			puts "care"			
+		when @dignities.has_value?(3)&&@dignities.has_value?(2)
+			puts "fullhouse"
+		when strait?
+			puts "flush"
+		when strait
+			puts	"strait"
+		when @dignities.has_value?(3)
+			puts "set"
+		when two_pairs?
+			puts "two pairs"	
+		when @dignities.has_value?(2)
+			puts "pair"
+	  when @dignities.has_value?(1)
+			puts "one"
 		end
-		puts @suits
-		puts @dignities
 	end
 
+	private
 
-  private	def hashes
+	def strait?
+		@suits.has_value?(5)
+	end
+
+	def two_pairs?
+		pairs_number = 0
+		@dignities.values.each do |value|
+			if value==2
+				pairs_number+=1
+			end
+		end
+		if pairs_number==2
+			return true
+		end
+	end
+
+  def hashes
   	@cards.each do |card|
   		@suits[card.suit] ||= 0
   		@suits[card.suit] += 1
@@ -123,23 +151,53 @@ class Determinator
   	end
   end
 
-
-#make strait
+#must do when A is 1 
   def strait?
-  	@cards.sort_by {|card| card.dignity}.each do |card|
-  		puts card.show
-  	end
-
-
-  	#Deck.dignities
+  	if (unic?&&range?)
+ 			return true
+		end
   end
+	
+ 	#checks when every card is unic
+	def unic?
+		unless (@dignities.has_value?(2)||
+ 		@dignities.has_value?(3)||
+ 		@dignities.has_value?(4))
+ 		return true
+ 		end
+	end
+
+	def range?
+	  if (@cards.max_by{|card| card.dignity}.dignity -
+  		 @cards.min_by{|card| card.dignity}.dignity == 4)
+	  	return true
+		end
+	end
+
+
 end
 
 d = Determinator.new
 t = Table.new
-t.player_hand
-d.determination(t.board)
-d.strait?
+player_hand = t.player_hand
+puts "Player hand is: "
+player_hand.each do |ph|
+	print ph.show, " "
+end
+puts
+
+board = t.board
+puts
+puts "Board is: "
+board.each do |b|
+	print b.show, " "
+end
+puts	
+puts
+puts "Wining combo is:"
+d.determination(board)
+
+#d.strait?
 
 
 #print d.get_card.show, d.get_card.show
