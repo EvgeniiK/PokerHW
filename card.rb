@@ -11,14 +11,14 @@ class Card
 		#or can initialize all dignities in hash
 		#this method brakes when deck differs from origin
 		letters_dingnity = {10=>'T',11=>'J',12=>'Q',13=>'K',14=>'A'}
+		#is it right construction "if-else"? or it needs to be compressed?
 		print @suit, 
-		if @dignity>10 
-			letters_dingnity[@dignity]  
-		else 
-			@dignity
-		end
+					if @dignity>10 
+						letters_dingnity[@dignity]  
+					else 
+						@dignity
+					end
 	end
-
 end
 
 
@@ -47,15 +47,12 @@ class Deck
 
 	def show
 		puts "Cards in deck:"
-		@deck.each do |card|
-			print card.suit, card.dignity, " " 
-		end
+		@deck.each { |card| print card.suit, card.dignity, " " }
 		puts
 	end
 
 	def get_card
 		@deck.delete card = @deck.sample
-		return card
 	end
 
 	#need to write comparator to compare whith "Card.new("H",2)"
@@ -70,22 +67,18 @@ class Table
 	def initialize
 		@deck = Deck.new
 		@deck.create_new
-
 	end
 
+	#how can i do this without return?
 	def player_hand
 		player_cards = []
-		(1..2).each do
-			player_cards = player_cards + [@deck.get_card]
-		end
+		2.times { player_cards = player_cards + [@deck.get_card] }
 		return player_cards
 	end
 
 	def board
 		board_cards = []	
-		(1..5).each do
-			board_cards = board_cards + [@deck.get_card]
-		end
+		5.times { board_cards = board_cards + [@deck.get_card] }
 		return board_cards
 	end
 end
@@ -100,16 +93,17 @@ class Determinator
 		@cards = cards
 		hashes
 		strait = strait?
+
 		case
-		when strait&&strait?&&@dignities.has_key(14)
+		when strait&&flush?&&@dignities.has_key(14)
 			puts "flash royal"
-		when strait&&strait?
+		when strait&&flush?
 			puts "strait-flush"
 		when @dignities.has_value?(4)
 			puts "care"			
 		when @dignities.has_value?(3)&&@dignities.has_value?(2)
 			puts "fullhouse"
-		when strait?
+		when flush?
 			puts "flush"
 		when strait
 			puts	"strait"
@@ -126,20 +120,18 @@ class Determinator
 
 	private
 
-	def strait?
+	def flush?
 		@suits.has_value?(5)
 	end
 
 	def two_pairs?
 		pairs_number = 0
+
 		@dignities.values.each do |value|
-			if value==2
-				pairs_number+=1
-			end
+			pairs_number+=1 if value==2
 		end
-		if pairs_number==2
-			return true
-		end
+		
+		true if pairs_number==2
 	end
 
   def hashes
@@ -151,27 +143,22 @@ class Determinator
   	end
   end
 
-#must do when A is 1 
+	#must do when A is 1 
   def strait?
-  	if (unic?&&range?)
- 			return true
-		end
+  	true if unic?&&range?
   end
 	
  	#checks when every card is unic
+ 	#I need "if there only "1" value", but i dont know how do this
 	def unic?
-		unless (@dignities.has_value?(2)||
- 		@dignities.has_value?(3)||
- 		@dignities.has_value?(4))
- 		return true
- 		end
+		true unless @dignities.has_value?(2)||
+					 			@dignities.has_value?(3)||
+ 								@dignities.has_value?(4)
 	end
 
 	def range?
-	  if (@cards.max_by{|card| card.dignity}.dignity -
-  		 @cards.min_by{|card| card.dignity}.dignity == 4)
-	  	return true
-		end
+	  true if @cards.max_by{|card| card.dignity}.dignity -
+  		 			@cards.min_by{|card| card.dignity}.dignity == 4
 	end
 
 
@@ -181,17 +168,13 @@ d = Determinator.new
 t = Table.new
 player_hand = t.player_hand
 puts "Player hand is: "
-player_hand.each do |ph|
-	print ph.show, " "
-end
+player_hand.each {|ph| print ph.show, " "}
 puts
 
 board = t.board
 puts
 puts "Board is: "
-board.each do |b|
-	print b.show, " "
-end
+board.each {|b|	print b.show, " "}
 puts	
 puts
 puts "Wining combo is:"
