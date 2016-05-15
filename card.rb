@@ -145,23 +145,28 @@ class Determinator
 
 	#must do when A is 1 
   def strait?
-  	true if unic?&&range?
+  	true if strait_exeption?||unic?&&range?
+  end
+
+  #by brute force
+  def strait_exeption?
+	true if @dignities.has_key?(14)&&@dignities.has_key?(5)&&@dignities.has_key?(2)&&
+			 		@dignities.has_key?(3)&&@dignities.has_key?(4)
   end
 	
  	#checks when every card is unic
- 	#I need "if there only "1" value", but i dont know how do this
+ 	#I need "if there only "1" value", but i dont know how to do this
 	def unic?
 		true unless @dignities.has_value?(2)||
 					 			@dignities.has_value?(3)||
  								@dignities.has_value?(4)
 	end
 
+	#this method must to go after unic?
 	def range?
 	  true if @cards.max_by{|card| card.dignity}.dignity -
-  		 			@cards.min_by{|card| card.dignity}.dignity == 4
+	  			  @cards.min_by{|card| card.dignity}.dignity == 4
 	end
-
-
 end
 
 d = Determinator.new
