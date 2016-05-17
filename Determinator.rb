@@ -97,6 +97,28 @@ puts "Player hand is: "
 player_hand.each {|ph| print ph.show, " "}
 puts
 
+
+
+mas = [1,2,3,4,5]
+mas1 = [6,7]
+	print mas
+	puts
+(0..mas.length-1).each do |i|
+	m1 = mas[i]
+	mas[i] = mas1[0]
+	print "six combo", mas
+	puts
+	(0..mas.length-1).each do |j|
+		m2 = mas[j]
+		mas[j] = mas1[1]
+		print "seven combo", mas
+		mas[j] = m2
+	end
+	mas[i] = m1
+end
+
+
+
 board = t.board
 puts
 puts "Board is: "
