@@ -1,9 +1,13 @@
 require_relative 'deck'
+require_relative 'card'
+require_relative 'determinator'
 
 # Contain all cadrs in hand and on table
 class Table
   def initialize
+    @determinator = Determinator.new
     @deck = Deck.new
+    @card = Card.new
     @deck.create_new
   end
 
@@ -18,4 +22,41 @@ class Table
     5.times { board_cards += [@deck.new_card] }
     board_cards
   end
+
+  def run_game
+    puts '~~~~~~~~~~~~~~~~~~~~~~~~~~'
+
+    player_turn
+
+    dealer_turn
+
+    winner_is
+
+    puts '~~~~~~~~~~~~~~~~~~~~~~~~~~'
+  end
+
+  def player_turn
+    @ph = player_hand
+    puts 'Player hand is: '
+    @card.show_many(cards: @ph)
+    puts
+  end
+
+  def dealer_turn
+    @board_cards = board
+    puts 'Board is: '
+    @card.show_many(cards: @board_cards)
+    puts
+  end
+
+  def winner_is
+    puts 'Wining combo is:'
+    combo = @determinator.combo_counter(cards: @ph + @board_cards)
+    print @determinator.determination(cards: combo), ' ',
+          @card.show_many(cards: combo)
+    puts
+  end
 end
+
+table = Table.new
+table.run_game

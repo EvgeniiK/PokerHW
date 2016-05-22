@@ -12,7 +12,7 @@ class Deck
   def create_new
     @suits.each do |suit|
       @dignities.each do |dignity|
-        @deck += [Card.new(suit, dignity)]
+        @deck += [Card.new(suit: suit, dignity: dignity)]
       end
     end
   end
@@ -24,10 +24,10 @@ class Deck
   end
 
   def new_card
-    @deck.delete @deck.sample
+    @deck.delete(@deck.sample)
   end
 
-  def card?(card)
+  def card?(card: 'input one card')
     @deck.include? card
   end
 end
