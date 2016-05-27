@@ -1,10 +1,19 @@
+require_relative 'equalizator'
+
 # Has all counting methods
 class Determinator
   def initialize
     @values = { 10 => 'Royal flush', 9 => 'Straight flush', 8 => 'Quads',
                 7 => 'Full house', 6 => 'Flush', 5 => 'Straight', 4 => 'Set',
                 3 => 'Two pairs', 2 => 'One pair', 1 => 'High card' }
+    @e = Equalizator.new
   end
+
+  # Return numeric value of combo name
+  def combo_value(combo_name: 'input combo name')
+    @values.key(combo_name)
+  end
+
 
   def combo_counter(cards: 'Input cards')
     highest_value = 0
@@ -14,18 +23,15 @@ class Determinator
       if highest_value < value
         highest_value = value
         highest_combo = combo
+      elsif highest_value == value
+        highest_combo = @e.greater(highest_combo, combo)
       end
     end
     highest_combo
   end
 
-  def combo_value(combo_name: 'input combo name')
-    @values.key(combo_name)
-  end
-
   def determination(cards: 'input 5 cards')
-    @cards = cards
-    hashes
+    hashes(cards)
     if strait? && flush? && @dignities.key?(14)
       @values[10]
     elsif strait? && flush?
@@ -49,7 +55,7 @@ class Determinator
     end
   end
 
-  private
+  #private
 
   def quads?
     @dignities.value?(4)
@@ -59,7 +65,7 @@ class Determinator
     @suits.value?(5)
   end
 
-  # Has exeption or all cards are unic and 5 cards in order
+  # Has exception or all cards are unic and 5 cards in order
   def strait?
     strait_exeption? || range? ? true : false
   end
@@ -84,10 +90,10 @@ class Determinator
     @dignities.value?(1)
   end
 
-  def hashes
+  def hashes(cards)
     @suits = {}
     @dignities = {}
-    @cards.each do |card|
+    cards.each do |card|
       @suits[card.suit] ||= 0
       @suits[card.suit] += 1
       @dignities[card.dignity] ||= 0

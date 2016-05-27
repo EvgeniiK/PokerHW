@@ -27,6 +27,11 @@ class Deck
     @deck.delete(@deck.sample)
   end
 
+  def new_card!
+    @deck.sample
+  end
+
+
   def card?(card: 'input one card')
     @deck.include? card
   end

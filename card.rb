@@ -6,7 +6,8 @@ class Card
   def initialize(suit: nil, dignity: nil)
     @suit = suit
     @dignity = dignity
-    @letters_dingnity = { 10 => 'T', 11 => 'J', 12 => 'Q', 13 => 'K', 14 => 'A' }
+    @letters_dingnity = { 10 => 'T', 11 => 'J',
+                          12 => 'Q', 13 => 'K', 14 => 'A' }
   end
 
   def show
@@ -14,8 +15,8 @@ class Card
     print @suit, @dignity >= 10 ? @letters_dingnity[@dignity] : @dignity
   end
 
-  def show_many(cards: 'Input cards')
-    cards.each {|card| print card.show, " "}
+  def self.show_many(cards: 'Input cards')
+    cards.each { |card| print card.show, ' ' }
     puts
   end
 
